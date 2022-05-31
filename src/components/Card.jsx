@@ -19,7 +19,6 @@ export function Card(props) {
                         ) : (
                             <img src={poster} alt={title} />
                         )}
-                        <span className="card-title">{title}</span>
                     </div>
                     <div className="card-content">
                         <strong>{title}</strong>
@@ -37,7 +36,7 @@ export function Card(props) {
                                 props.showDetails(id);
                             }}
                         >
-                            Details
+                            Movie Details
                         </a>
                     </div>
                 </div>

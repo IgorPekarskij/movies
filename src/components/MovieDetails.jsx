@@ -61,11 +61,12 @@ export class MovieDetails extends React.Component {
                             <div className="card large">
                                 <div className="card-image">
                                     <img src={poster} alt={title} />
-                                    <span className="card-title">{title}</span>
                                 </div>
                                 <div className="card-content">
                                     <p>
-                                        <strong>{title}</strong>
+                                        <strong className="movie-title">
+                                            {title}
+                                        </strong>
                                         <span className="right">
                                             <strong>Genre:</strong> {genre}
                                         </span>
