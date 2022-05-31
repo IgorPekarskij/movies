@@ -6,6 +6,7 @@ import { Error } from "../components/Error";
 import { MovieDetails } from "../components/MovieDetails";
 
 const MOVIES_API_KEY = process.env.REACT_APP_MOVIES_API_KEY;
+const FILMS_PER_PAGE = 10;
 
 export class Main extends React.Component {
     state = {
@@ -15,17 +16,19 @@ export class Main extends React.Component {
         error: "",
         searchType: "all",
         id: "",
+        pageNumber: 1,
+        totalFilmsCount: 0,
     };
 
     componentDidMount() {
-        this.doSearch();
+        this.doSearch(true);
     }
 
     searchHandler = (data) => {
         this.setState(
-            { search: data.search, searchType: data.searchType },
+            { search: data.search, searchType: data.searchType, pageNumber: 1 },
             () => {
-                this.doSearch();
+                this.doSearch(false);
             }
         );
     };
@@ -34,7 +37,7 @@ export class Main extends React.Component {
         this.setState({ id: id });
     };
 
-    doSearch = () => {
+    doSearch = (isInit) => {
         if (this.state.search.length < 1) {
             return this.setState({
                 error: "Please enter at least 2 character to search films.",
@@ -42,12 +45,12 @@ export class Main extends React.Component {
                 loading: false,
             });
         }
-
-        this.setState({ loading: true });
+        const pageNumber = isInit ? 1 : this.state.pageNumber;
+        this.setState({ loading: true, pageNumber: pageNumber });
         fetch(
-            `https://www.omdbapi.com/?apikey=${MOVIES_API_KEY}&s=${
-                this.state.search
-            }${
+            `https://www.omdbapi.com/?apikey=${MOVIES_API_KEY}&page=${
+                this.state.pageNumber
+            }&s=${this.state.search}${
                 this.state.searchType !== "all"
                     ? `&type=${this.state.searchType}`
                     : ""
@@ -60,6 +63,7 @@ export class Main extends React.Component {
                 if (movies.Search) {
                     this.setState({
                         movies: movies.Search,
+                        totalFilmsCount: +movies.totalResults,
                         loading: false,
                         error: "",
                     });
@@ -72,8 +76,14 @@ export class Main extends React.Component {
             });
     };
 
+    swapPage = (pageCount) => {
+        this.setState({ pageNumber: this.state.pageNumber + pageCount }, () =>
+            this.doSearch(false)
+        );
+    };
+
     getContent = () => {
-        const { loading, movies, id } = this.state;
+        const { loading, movies, id, totalFilmsCount, pageNumber } = this.state;
         if (id.length > 0) {
             return <MovieDetails id={id} />;
         } else {
@@ -85,7 +95,15 @@ export class Main extends React.Component {
                     ) : this.state.error.length > 0 ? (
                         <Error error={this.state.error} />
                     ) : (
-                        <Cards movies={movies} showDetails={this.showDetails} />
+                        <Cards
+                            isLast={
+                                totalFilmsCount / pageNumber < FILMS_PER_PAGE
+                            }
+                            isFirst={pageNumber === 1}
+                            movies={movies}
+                            swapPage={this.swapPage}
+                            showDetails={this.showDetails}
+                        />
                     )}
                 </>
             );

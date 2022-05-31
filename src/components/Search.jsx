@@ -16,7 +16,6 @@ export class Search extends React.Component {
 
     doSearch = (event) => {
         if (event.keyCode === 13) {
-            console.log("event.keyCode", event.keyCode);
             this.searchHandler({
                 search: this.state.search,
                 searchType: this.state.searchType,
@@ -25,7 +24,6 @@ export class Search extends React.Component {
     };
 
     handleTypeChange = (event) => {
-        console.log("event.target.value ", event.target.value);
         this.setState({ searchType: event.target.value }, () =>
             this.searchHandler({
                 search: this.state.search,

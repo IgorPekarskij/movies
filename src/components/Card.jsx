@@ -9,7 +9,7 @@ export function Card(props) {
     return (
         <div className="row">
             <div className="col s12 m12">
-                <div className="card medium">
+                <div className="card large">
                     <div className="card-image">
                         {poster === "N/A" ? (
                             <img
