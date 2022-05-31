@@ -43,7 +43,14 @@ export class MovieDetails extends React.Component {
 
         return (
             <div className="film-details">
-                <a className="waves-effect waves-light btn-small" href="/">
+                <a
+                    className="waves-effect waves-light btn-small"
+                    href={
+                        window.location.hostname === "igorpekarskij.github.io"
+                            ? "/movies"
+                            : "/"
+                    }
+                >
                     Back
                 </a>
                 {this.state.loading ? (
