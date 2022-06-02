@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Cards } from "../components/Cards";
 import { Loader } from "../components/Loader";
 import { Search } from "../components/Search";
@@ -8,52 +8,52 @@ import { MovieDetails } from "../components/MovieDetails";
 const MOVIES_API_KEY = process.env.REACT_APP_MOVIES_API_KEY;
 const FILMS_PER_PAGE = 10;
 
-export class Main extends React.Component {
-    state = {
-        movies: [],
-        search: "matrix",
-        loading: true,
-        error: "",
-        searchType: "all",
-        id: "",
-        pageNumber: 1,
-        totalFilmsCount: 0,
-    };
+export function Main() {
+    const [isInit, setIsInit] = useState(true);
+    const [movies, setMovies] = useState([]);
+    const [search, setSearch] = useState("matrix");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [searchType, setSearchType] = useState("all");
+    const [id, setId] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [totalMoviesCount, setTotalMoviesCount] = useState(0);
 
-    componentDidMount() {
-        this.doSearch(true);
-    }
+    useEffect(() => {
+        doSearch();
+        setIsInit(false);
+    }, []);
 
-    searchHandler = (data) => {
-        this.setState(
-            { search: data.search, searchType: data.searchType, pageNumber: 1 },
-            () => {
-                this.doSearch(false);
-            }
-        );
-    };
-
-    showDetails = (id) => {
-        this.setState({ id: id });
-    };
-
-    doSearch = (isInit) => {
-        if (this.state.search.length < 1) {
-            return this.setState({
-                error: "Please enter at least 2 character to search films.",
-                movies: [],
-                loading: false,
-            });
+    useEffect(() => {
+        if (!isInit) {
+            doSearch();
         }
-        const pageNumber = isInit ? 1 : this.state.pageNumber;
-        this.setState({ loading: true, pageNumber: pageNumber });
+    }, [search, searchType, pageNumber]);
+
+    const searchHandler = (data) => {
+        setSearch(data.search);
+        setSearchType(data.searchType);
+        setPageNumber(1);
+    };
+
+    const showDetails = (id) => {
+        setId(id);
+    };
+
+    const handleError = () => {
+        setError("Please enter at least 2 character to search films.");
+        setMovies([]);
+        setLoading(false);
+    };
+
+    const doSearch = () => {
+        if (search.length < 1) {
+            return handleError();
+        }
+
         fetch(
-            `https://www.omdbapi.com/?apikey=${MOVIES_API_KEY}&page=${
-                this.state.pageNumber
-            }&s=${this.state.search}${
-                this.state.searchType !== "all"
-                    ? `&type=${this.state.searchType}`
-                    : ""
+            `https://www.omdbapi.com/?apikey=${MOVIES_API_KEY}&page=${pageNumber}&s=${search}${
+                searchType !== "all" ? `&type=${searchType}` : ""
             }`
         )
             .then((result) => {
@@ -61,48 +61,46 @@ export class Main extends React.Component {
             })
             .then((movies) => {
                 if (movies.Search) {
-                    this.setState({
-                        movies: movies.Search,
-                        totalFilmsCount: +movies.totalResults,
-                        loading: false,
-                        error: "",
-                    });
+                    setMovies(movies.Search);
+                    setTotalMoviesCount(+movies.totalResults);
+                    setError("");
+                    setLoading(false);
                 } else {
-                    this.setState({ loading: false, error: movies["Error"] });
+                    setError(movies["Error"]);
+                    setLoading(false);
                 }
             })
             .catch((error) => {
-                this.setState({ error: error, movies: [], loading: false });
+                setError(error);
+                setLoading(false);
+                setMovies([]);
             });
     };
 
-    swapPage = (pageCount) => {
-        this.setState({ pageNumber: this.state.pageNumber + pageCount }, () =>
-            this.doSearch(false)
-        );
+    const swapPage = (pageCount) => {
+        setPageNumber(pageNumber + pageCount);
     };
 
-    getContent = () => {
-        const { loading, movies, id, totalFilmsCount, pageNumber } = this.state;
+    const getContent = () => {
         if (id.length > 0) {
             return <MovieDetails id={id} />;
         } else {
             return (
                 <>
-                    <Search searchHandler={this.searchHandler} />
+                    <Search searchHandler={searchHandler} />
                     {loading ? (
                         <Loader />
-                    ) : this.state.error.length > 0 ? (
-                        <Error error={this.state.error} />
+                    ) : error.length > 0 ? (
+                        <Error error={error} />
                     ) : (
                         <Cards
                             isLast={
-                                totalFilmsCount / pageNumber < FILMS_PER_PAGE
+                                totalMoviesCount / pageNumber < FILMS_PER_PAGE
                             }
                             isFirst={pageNumber === 1}
                             movies={movies}
-                            swapPage={this.swapPage}
-                            showDetails={this.showDetails}
+                            swapPage={swapPage}
+                            showDetails={showDetails}
                         />
                     )}
                 </>
@@ -110,7 +108,5 @@ export class Main extends React.Component {
         }
     };
 
-    render() {
-        return <div className="container content">{this.getContent()}</div>;
-    }
+    return <div className="container content">{getContent()}</div>;
 }

@@ -1,111 +1,103 @@
-import React from "react";
+import React, { useState } from "react";
 
-export class Search extends React.Component {
-    constructor(props) {
-        super(props);
-        this.searchHandler = props.searchHandler;
-        this.state = {
-            search: "",
-            searchType: "all",
-        };
-    }
+export function Search(props) {
+    const { searchHandler } = props;
+    const [search, setSearch] = useState("");
+    const [searchType, setSearchType] = useState("all");
 
-    searchChangeHandler = (event) => {
-        this.setState({ search: event.target.value });
+    const searchChangeHandler = (event) => {
+        setSearch(event.target.value);
     };
 
-    doSearch = (event) => {
+    const doSearch = (event) => {
         if (event.keyCode === 13) {
-            this.searchHandler({
-                search: this.state.search,
-                searchType: this.state.searchType,
+            searchHandler({
+                search: search,
+                searchType: searchType,
             });
         }
     };
 
-    handleTypeChange = (event) => {
-        this.setState({ searchType: event.target.value }, () =>
-            this.searchHandler({
-                search: this.state.search,
-                searchType: this.state.searchType,
-            })
-        );
+    const handleTypeChange = (event) => {
+        setSearchType(event.target.value);
+        searchHandler({
+            search: search,
+            searchType: event.target.value,
+        });
     };
 
-    render() {
-        return (
-            <div className="search" onKeyUp={this.doSearch}>
-                <div className="search-row">
-                    <span className="search-input">
-                        <input
-                            placeholder="search"
-                            type="search"
-                            className="validate"
-                            value={this.state.search}
-                            onChange={this.searchChangeHandler}
-                        />
-                    </span>
-                    <span className="button-search">
-                        <button
-                            className="btn waves-effect waves-light btn-small search-button"
-                            onClick={() => {
-                                this.searchHandler({
-                                    search: this.state.search,
-                                    searchType: this.state.searchType,
-                                });
-                            }}
-                        >
-                            Search
-                        </button>
-                    </span>
-                </div>
-                <div className="search-type-section">
-                    <label>
-                        <input
-                            type="radio"
-                            className="with-gap"
-                            name="searchType"
-                            value="all"
-                            onChange={this.handleTypeChange}
-                            checked={this.state.searchType === "all"}
-                        />
-                        <span>All</span>
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            className="with-gap"
-                            name="searchType"
-                            value="movie"
-                            onChange={this.handleTypeChange}
-                            checked={this.state.searchType === "movie"}
-                        />
-                        <span>Only Movies</span>
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            className="with-gap"
-                            name="searchType"
-                            value="series"
-                            onChange={this.handleTypeChange}
-                            checked={this.state.searchType === "series"}
-                        />
-                        <span>Only Series</span>
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            className="with-gap"
-                            name="searchType"
-                            value="game"
-                            onChange={this.handleTypeChange}
-                            checked={this.state.searchType === "game"}
-                        />
-                        <span>Only Games</span>
-                    </label>
-                </div>
+    return (
+        <div className="search" onKeyUp={doSearch}>
+            <div className="search-row">
+                <span className="search-input">
+                    <input
+                        placeholder="search"
+                        type="search"
+                        className="validate"
+                        value={search}
+                        onChange={searchChangeHandler}
+                    />
+                </span>
+                <span className="button-search">
+                    <button
+                        className="btn waves-effect waves-light btn-small search-button"
+                        onClick={() => {
+                            searchHandler({
+                                search: search,
+                                searchType: searchType,
+                            });
+                        }}
+                    >
+                        Search
+                    </button>
+                </span>
             </div>
-        );
-    }
+            <div className="search-type-section">
+                <label>
+                    <input
+                        type="radio"
+                        className="with-gap"
+                        name="searchType"
+                        value="all"
+                        onChange={handleTypeChange}
+                        checked={searchType === "all"}
+                    />
+                    <span>All</span>
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        className="with-gap"
+                        name="searchType"
+                        value="movie"
+                        onChange={handleTypeChange}
+                        checked={searchType === "movie"}
+                    />
+                    <span>Only Movies</span>
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        className="with-gap"
+                        name="searchType"
+                        value="series"
+                        onChange={handleTypeChange}
+                        checked={searchType === "series"}
+                    />
+                    <span>Only Series</span>
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        className="with-gap"
+                        name="searchType"
+                        value="game"
+                        onChange={handleTypeChange}
+                        checked={searchType === "game"}
+                    />
+                    <span>Only Games</span>
+                </label>
+            </div>
+        </div>
+    );
 }
