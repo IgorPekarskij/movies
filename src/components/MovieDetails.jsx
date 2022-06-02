@@ -8,6 +8,20 @@ export function MovieDetails(props) {
     const [film, setFilm] = useState({});
     const [loading, setLoading] = useState(true);
 
+    const {
+        Title: title,
+        Genre: genre,
+        Poster: poster,
+        Released: released,
+        Runtime: runtime,
+        Director: director,
+        Writer: writer,
+        Actors: actors,
+        Plot: plot,
+        Country: country,
+        Awards: awards,
+    } = film;
+
     useEffect(() => {
         fetch(
             `https://www.omdbapi.com/?apikey=${API_KEY}&i=${props.id}&plot=full`
@@ -24,20 +38,6 @@ export function MovieDetails(props) {
                 <Error error={error} />;
             });
     }, []);
-
-    const {
-        Title: title,
-        Genre: genre,
-        Poster: poster,
-        Released: released,
-        Runtime: runtime,
-        Director: director,
-        Writer: writer,
-        Actors: actors,
-        Plot: plot,
-        Country: country,
-        Awards: awards,
-    } = film;
 
     return (
         <div className="film-details">

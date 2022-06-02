@@ -19,17 +19,6 @@ export function Main() {
     const [pageNumber, setPageNumber] = useState(1);
     const [totalMoviesCount, setTotalMoviesCount] = useState(0);
 
-    useEffect(() => {
-        doSearch();
-        setIsInit(false);
-    }, []);
-
-    useEffect(() => {
-        if (!isInit) {
-            doSearch();
-        }
-    }, [search, searchType, pageNumber]);
-
     const searchHandler = (data) => {
         setSearch(data.search);
         setSearchType(data.searchType);
@@ -107,6 +96,17 @@ export function Main() {
             );
         }
     };
+
+    useEffect(() => {
+        doSearch();
+        setIsInit(false);
+    }, []);
+
+    useEffect(() => {
+        if (!isInit) {
+            doSearch();
+        }
+    }, [search, searchType, pageNumber]);
 
     return <div className="container content">{getContent()}</div>;
 }
