@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { MoviesContext } from "../context/FilmsContext";
+
 import { Error } from "../components/Error";
 import { Loader } from "../components/Loader";
 
 const API_KEY = process.env.REACT_APP_MOVIES_API_KEY;
 
 export function MovieDetails(props) {
+    const { setId } = useContext(MoviesContext);
     const [film, setFilm] = useState({});
     const [loading, setLoading] = useState(true);
 
@@ -41,16 +44,12 @@ export function MovieDetails(props) {
 
     return (
         <div className="film-details">
-            <a
+            <button
                 className="waves-effect waves-light btn-small"
-                href={
-                    window.location.hostname === "igorpekarskij.github.io"
-                        ? "/movies"
-                        : "/"
-                }
+                onClick={() => setId("")}
             >
                 Back
-            </a>
+            </button>
             {loading ? (
                 <Loader />
             ) : (

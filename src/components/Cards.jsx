@@ -8,16 +8,12 @@ export function Cards(props) {
                 {props.movies.map((film) => {
                     return (
                         <div key={film.imdbID} className="grid-row">
-                            <Card {...film} showDetails={props.showDetails} />
+                            <Card {...film} />
                         </div>
                     );
                 })}
             </div>
-            <Paginator
-                isLast={props.isLast}
-                isFirst={props.isFirst}
-                swapPage={props.swapPage}
-            />
+            <Paginator />
         </>
     );
 }

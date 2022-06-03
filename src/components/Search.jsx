@@ -1,29 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { MoviesContext } from "../context/FilmsContext";
 
-export function Search(props) {
-    const { searchHandler } = props;
-    const [search, setSearch] = useState("");
-    const [searchType, setSearchType] = useState("all");
+export function Search() {
+    const { search, searchType, setPageNumber, setSearch, setSearchType } =
+        useContext(MoviesContext);
+    const [localSearch, setLocalSearch] = useState(search);
+    const [localSearchType, setLocalSearchType] = useState(searchType);
 
     const searchChangeHandler = (event) => {
-        setSearch(event.target.value);
+        setLocalSearch(event.target.value);
+    };
+
+    const searchHandler = () => {
+        setSearch(localSearch);
+        setSearchType(localSearchType);
+        setPageNumber(1);
     };
 
     const doSearch = (event) => {
         if (event.keyCode === 13) {
-            searchHandler({
-                search: search,
-                searchType: searchType,
-            });
+            searchHandler();
         }
     };
 
     const handleTypeChange = (event) => {
-        setSearchType(event.target.value);
-        searchHandler({
-            search: search,
-            searchType: event.target.value,
-        });
+        setLocalSearchType(event.target.value);
+        searchHandler();
     };
 
     return (
@@ -34,7 +36,7 @@ export function Search(props) {
                         placeholder="search"
                         type="search"
                         className="validate"
-                        value={search}
+                        value={localSearch}
                         onChange={searchChangeHandler}
                     />
                 </span>
@@ -42,10 +44,7 @@ export function Search(props) {
                     <button
                         className="btn waves-effect waves-light btn-small search-button"
                         onClick={() => {
-                            searchHandler({
-                                search: search,
-                                searchType: searchType,
-                            });
+                            searchHandler();
                         }}
                     >
                         Search

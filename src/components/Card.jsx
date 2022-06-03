@@ -1,4 +1,8 @@
+import React, { useContext } from "react";
+import { MoviesContext } from "../context/FilmsContext";
+
 export function Card(props) {
+    const { setId } = useContext(MoviesContext);
     const {
         Title: title,
         Poster: poster,
@@ -33,7 +37,7 @@ export function Card(props) {
                             href="!#"
                             onClick={(event) => {
                                 event.preventDefault();
-                                props.showDetails(id);
+                                setId(id);
                             }}
                         >
                             Movie Details
