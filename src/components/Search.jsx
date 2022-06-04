@@ -9,6 +9,7 @@ export function Search() {
 
     const searchChangeHandler = (event) => {
         setLocalSearch(event.target.value);
+        setSearch(event.target.value);
     };
 
     const searchHandler = () => {
@@ -25,7 +26,7 @@ export function Search() {
 
     const handleTypeChange = (event) => {
         setLocalSearchType(event.target.value);
-        searchHandler();
+        setSearchType(event.target.value);
     };
 
     return (
