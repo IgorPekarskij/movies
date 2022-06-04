@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MoviesContext } from "../context/FilmsContext";
-
 import { Error } from "../components/Error";
 import { Loader } from "../components/Loader";
 
