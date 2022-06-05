@@ -83,5 +83,5 @@ export function Main() {
         doSearch();
     }, [search, searchType, pageNumber]);
 
-    return <div className="container">{getContent()}</div>;
+    return <div className="container content">{getContent()}</div>;
 }

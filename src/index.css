@@ -11,6 +11,10 @@ nav {
   padding: 0 1rem;
 }
 
+.content {
+  min-height: calc(100vh - 50px - 64px);
+}
+
 .card .movie-title {
   font-size: 1.5rem;
 }
@@ -51,7 +55,7 @@ footer.page-footer {
 }
 
 .search {
-  margin: 1rem;
+  padding: 1rem;
 }
 
 .search-type-section > label {
